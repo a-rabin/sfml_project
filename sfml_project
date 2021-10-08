@@ -1,0 +1,161 @@
+#!/bin/bash
+
+
+
+echo '#####################################################################'
+echo '#               VS Code: C/C++ Project Template'
+echo '#                       [SFML Edition]'
+echo '#                           v0.04'
+echo '#                           ver 1'
+echo '#         Original Code: Moros Smith <moros1138@gmail.com>'
+echo '#  SFML Edition by AKA Rabin Studio <akarabinstudio@protonmail.com>'
+echo '######################################################################'
+echo ''
+
+# find ourself so we can open ourself later
+SELF="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SELF="$SELF/sfml_project"
+
+
+
+# if we make it here, our environment is ready!
+
+# prompt for the project name
+read -p "Project Name? (default: MyApp) " project_name
+
+# empty, at first, to keep track of which libraries to download
+project_libs=""
+
+# prompt for SFML
+read -p "Use SFML? (y/n) " temp
+if [ "$temp" = "y" ]; then project_libs="${project_libs} libsfml-dev"; fi
+
+
+# if the project name was left empty, use MyApp as default
+if [ -z "$project_name" ]; then
+	project_name=MyApp
+fi
+
+echo ''
+echo -n 'Generating archive....'
+
+# create project directory
+mkdir $project_name
+
+# move into the project directory
+cd $project_name
+
+###############################################################################
+# START: LOAD THE ARCHIVE FROM THE END OF THE SCRIPT
+###############################################################################
+# In order to simplify the creation of the project, we have added an archive
+# in base64 format at the end of this script. The following mess allows us
+# to load the archive, decode it, and extract it.
+###############################################################################
+
+# This finds the line number where the base64 encoded archive lies
+PAYLOAD_LINE=$(awk '/^__PAYLOAD_BEGINS__/ { print NR + 1; exit 0; }' $SELF)
+
+# This bit does a few things in one line
+#
+#   1.  uses tail on this script and outputs everything past the
+#       __PAYLOAD_BEGINS__ marker, which we assume is a base64
+#       encoded archive file.
+#
+#   2.  decodes the base64 data and pipes it
+#
+#   3.  uses tar to unzip and extract the archive
+
+tail -n +${PAYLOAD_LINE} $SELF | base64 --decode - | tar xz
+
+###############################################################################
+# END: LOAD THE ARCHIVE FROM THE END OF THE SCRIPT
+###############################################################################
+
+echo ' done.'
+echo ''
+
+
+for lib in $project_libs
+do
+
+    #SFML development libraries checker
+
+
+		dpkg -s "$lib" >/dev/null 2>&1 && {
+			echo -e 'SFML is installed, proceeding...\n'
+		} || {
+			echo 'SFML is missing, please install SFML by using the following command:'
+			echo '"sudo apt install libsfml-dev"'
+			echo 'Program will now be closed.'
+			exit 1
+		}
+
+
+
+done
+
+echo ''
+echo -n 'String replacements....'
+
+# string replacements
+sed -i "s/{{BINARY_NAME}}/$project_name/g" Makefile
+sed -i "s/{{BINARY_NAME}}/$project_name/g" .gitignore
+sed -i "s/{{BINARY_NAME}}/$project_name/g" .vscode/launch.json
+
+echo ' done.'
+echo ''
+
+
+# prompt for Git repository
+read -p "Initialize a Git Repository? (y/n) " temp
+if [ "$temp" = "y" ]; then git init &> /dev/null; git add .; git commit -m "initial commit" &> /dev/null; temp=""; fi
+
+# prompt for opening the project in VS Code
+read -p "Open project in VS Code? (y/n) " temp
+if [ "$temp" = "y" ]; then code .; temp=""; fi
+
+# navigate back to the directory we came from
+cd ..
+
+# we're done!
+echo "Done!"
+
+###############################################################################
+# DO NOT EDIT BEYOND THIS POINT UNLESS YOU KNOW PRECISELY WHAT YOU ARE DOING!
+###############################################################################
+exit 0
+__PAYLOAD_BEGINS__
+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
