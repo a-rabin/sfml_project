@@ -24,7 +24,7 @@ RES         := res
 INC_FLAG    := -I$(INC)
 LIB_FLAG    := -L$(LIB)
 
-LIBRARIES   := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network
+LIBRARIES   := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network -lsfml-audio
 
 SOURCES     := $(wildcard $(SRC)/*.cpp)
 OBJECTS     := $(patsubst $(SRC)/%,$(OBJ)/%,$(SOURCES:.cpp=.o))
