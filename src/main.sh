@@ -91,6 +91,9 @@ do
 			exit 1
 		}
 
+		curl -s https://raw.githubusercontent.com/a-rabin/sfml_project/main/src/example_sfml_program.cpp -o src/main.cpp
+
+
 
 
 done
